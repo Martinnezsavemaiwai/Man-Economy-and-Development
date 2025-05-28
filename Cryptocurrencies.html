@@ -1,546 +1,733 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cryptocurrency Deep Dive - สรุปลึกซึ้ง</title>
+    <title>Cryptocurrency: คู่มือฉบับสมบูรณ์</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        accent: '#06b6d4',
+                        dark: '#0f172a',
+                        light: '#f8fafc'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-in-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'float': 'float 3s ease-in-out infinite'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-
-        :root {
-            --neon-cyan: #00f5ff;
-            --neon-pink: #ff0080;
-            --neon-yellow: #fcee09;
-            --dark-bg: #0a0a0a;
-            --dark-panel: #1a1a1a;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
-            --accent-blue: #0080ff;
-            --accent-purple: #8000ff;
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-
-        body {
-            font-family: 'Sarabun', 'Rajdhani', sans-serif;
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a0033 50%, var(--dark-bg) 100%);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
-
-        .container {
-            max-width: 210mm;
-            margin: 0 auto;
-            padding: 20px;
-            background: var(--dark-panel);
-            box-shadow: 0 0 50px rgba(0, 245, 255, 0.3);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 10px;
-            position: relative;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink), var(--neon-yellow), var(--accent-blue));
-            border-radius: 12px;
-            z-index: -1;
-            animation: glow-border 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes glow-border {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5rem;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 2rem;
-            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 245, 255, 0.5);
-            animation: pulse-glow 2s ease-in-out infinite alternate;
         }
-
-        @keyframes pulse-glow {
-            0% { filter: brightness(1); }
-            100% { filter: brightness(1.2); }
-        }
-
-        h2 {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 2rem 0 1rem 0;
-            color: var(--neon-cyan);
-            border-left: 4px solid var(--neon-pink);
-            padding-left: 1rem;
-            text-shadow: 0 0 10px rgba(0, 245, 255, 0.7);
-        }
-
-        h3 {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin: 1.5rem 0 0.8rem 0;
-            color: var(--neon-yellow);
-            text-shadow: 0 0 8px rgba(252, 238, 9, 0.6);
-        }
-
-        p, li {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            text-align: justify;
-        }
-
-        .highlight {
-            background: linear-gradient(90deg, rgba(255, 0, 128, 0.2), rgba(0, 245, 255, 0.2));
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            color: var(--neon-cyan);
-            font-weight: 600;
-        }
-
-        .warning-box {
-            background: linear-gradient(135deg, rgba(255, 0, 128, 0.1), rgba(128, 0, 255, 0.1));
-            border: 2px solid var(--neon-pink);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            box-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
-        }
-
-        .info-box {
-            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(0, 128, 255, 0.1));
-            border: 2px solid var(--neon-cyan);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
-        }
-
-        ul {
-            padding-left: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        li {
-            margin-bottom: 0.5rem;
-            position: relative;
-        }
-
-        li::marker {
-            color: var(--neon-cyan);
-        }
-
-        .section {
-            margin-bottom: 3rem;
-            padding: 2rem;
-            background: rgba(26, 26, 26, 0.8);
-            border-radius: 10px;
-            border: 1px solid rgba(0, 245, 255, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .tech-specs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .spec-card {
-            background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(255, 0, 128, 0.1));
-            border: 1px solid var(--neon-cyan);
-            border-radius: 8px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 245, 255, 0.2);
-        }
-
-        .spec-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 245, 255, 0.4);
-            border-color: var(--neon-pink);
-        }
-
-        .download-btn {
-            display: block;
-            width: 250px;
-            margin: 2rem auto;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, var(--neon-cyan), var(--accent-blue));
-            color: var(--dark-bg);
-            text-decoration: none;
-            border-radius: 30px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 245, 255, 0.4);
-        }
-
-        .download-btn:hover {
-            background: linear-gradient(45deg, var(--neon-pink), var(--neon-yellow));
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 0, 128, 0.5);
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding: 2rem;
-            border-top: 2px solid var(--neon-cyan);
-            color: var(--text-secondary);
-        }
-
-        @media print {
-            body {
-                background: white;
-                color: black;
-            }
-            .container {
-                box-shadow: none;
-                border: none;
-                background: white;
-            }
-            .container::before {
-                display: none;
-            }
-            h1, h2, h3 {
-                color: black;
-                text-shadow: none;
-            }
-            .section {
-                background: white;
-                border: 1px solid #ccc;
-            }
-        }
-
-        .matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -2;
-            opacity: 0.1;
+        .glass-effect {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
-<body>
-    <div class="matrix-bg"></div>
-    
-    <div class="container">
-        <h1>🔮 CRYPTOCURRENCY DEEP DIVE 🔮</h1>
-        <p style="text-align: center; font-size: 1.2rem; margin-bottom: 3rem; color: var(--neon-pink);">
-            สรุปลึกซึ้งและวิเคราะห์เทคโนโลยี Cryptocurrency ในยุคดิจิทัล
-        </p>
-
-        <div class="section">
-            <h2>🎯 ความหมายและแนวคิดพื้นฐาน</h2>
-            
-            <h3>Cryptocurrency คืออะไร?</h3>
-            <p><span class="highlight">Cryptocurrency</span> เป็นสกุลเงินดิจิทัลที่ใช้เทคโนโลยี Blockchain และเทคนิคการเข้ารหัส (Cryptography) ในการสร้างหน่วยเงินและยืนยันการทำธุรกรรม โดยมีลักษณะสำคัญ 3 ประการ:</p>
-            
-            <div class="tech-specs">
-                <div class="spec-card">
-                    <h3>🔐 Decentralisation</h3>
-                    <p>ไม่มีธนาคารกลางหรือหน่วยงานใดควบคุม ระบบทำงานแบบกระจายอำนาจ</p>
-                </div>
-                <div class="spec-card">
-                    <h3>🛡️ Immutability</h3>
-                    <p>ไม่สามารถแก้ไขหรือลบธุรกรรมที่ยืนยันแล้วได้ ข้อมูลมีความถาวร</p>
-                </div>
-                <div class="spec-card">
-                    <h3>👁️ Transparency</h3>
-                    <p>ธุรกรรมทั้งหมดเปิดเผยและตรวจสอบได้โดยผู้เข้าร่วมเครือข่าย</p>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white min-h-screen">
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 glass-effect">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold gradient-text">CryptoGuide</h1>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#overview" class="hover:text-cyan-400 transition-colors">ภาพรวม</a>
+                    <a href="#blockchain" class="hover:text-cyan-400 transition-colors">Blockchain</a>
+                    <a href="#mining" class="hover:text-cyan-400 transition-colors">Mining</a>
+                    <a href="#defi" class="hover:text-cyan-400 transition-colors">DeFi & NFT</a>
                 </div>
             </div>
+        </nav>
+    </header>
 
-            <h3>วิวัฒนาการของระบบการเงิน</h3>
-            <p>ระบบการเงินได้พัฒนาผ่าน 4 ยุค: <span class="highlight">การแลกเปลี่ยน → ทอง → เงินกระดาษ → เงินดิจิทัล</span> โดย Cryptocurrency เป็นขั้นต่อไปที่รวมคุณสมบัติที่จำเป็นทั้ง 4 ประการ: แบ่งแยกได้, หายาก, คงทน, และเป็นที่ยอมรับ</p>
-        </div>
-
-        <div class="section">
-            <h2>⚙️ กลไกการทำงาน</h2>
-            
-            <h3>Peer-to-Peer Transaction</h3>
-            <p>Cryptocurrency ช่วยให้ผู้ใช้สามารถส่งเงินโดยตรงถึงกันโดยไม่ต้องพึ่งพาตัวกลางอย่างธนาคาร ระบบจะบันทึกข้อมูลใน <span class="highlight">Public Ledger</span> ที่กระจายอยู่ในเครือข่าย</p>
-
-            <div class="info-box">
-                <h3>🔄 ขั้นตอนการทำธุรกรรม</h3>
-                <ul>
-                    <li><strong>สร้างธุรกรรม:</strong> ผู้ส่งระบุจำนวนเงินและที่อยู่ผู้รับ</li>
-                    <li><strong>Memory Pool:</strong> ธุรกรรมรอการยืนยันในคิว</li>
-                    <li><strong>Broadcasting:</strong> ส่งข้อมูลไปทั่วเครือข่าย</li>
-                    <li><strong>Verification:</strong> เครือข่ายตรวจสอบและยืนยัน</li>
-                    <li><strong>Block Addition:</strong> เพิ่มเข้าใน Blockchain</li>
-                </ul>
-            </div>
-
-            <h3>Cryptocurrency Wallet</h3>
-            <p>กระเป๋าเงินดิจิทัลมี 4 ประเภทหลัก:</p>
-            <ul>
-                <li><strong>Hardware Wallets:</strong> ปลอดภัยที่สุด เก็บ Private Key ออฟไลน์</li>
-                <li><strong>Desktop Wallets:</strong> ความปลอดภัยสูง เข้าถึงได้จากคอมพิวเตอร์เครื่องเดียว</li>
-                <li><strong>Mobile Wallets:</strong> สะดวกในการใช้งาน เหมาะสำหรับร้านค้า</li>
-                <li><strong>Cloud Wallets:</strong> เข้าถึงได้ทุกที่ แต่ความปลอดภัยต่ำกว่า</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>🔗 Blockchain Technology</h2>
-            
-            <h3>โครงสร้างของ Blockchain</h3>
-            <p><span class="highlight">Blockchain</span> คือ Distributed Ledger ที่ประกอบด้วย:</p>
-            <ul>
-                <li><strong>Block:</strong> กลุ่มของธุรกรรมที่ได้รับการยืนยันแล้ว</li>
-                <li><strong>Chain:</strong> การเชื่อมโยงแต่ละ Block ด้วยการเข้ารหัส</li>
-                <li><strong>Distributed:</strong> ข้อมูลกระจายอยู่ในทุกจุดของเครือข่าย</li>
-            </ul>
-
-            <div class="warning-box">
-                <h3>🛡️ ความจำเป็นของการตรวจสอบ</h3>
-                <p><strong>ป้องกัน Double-Spending:</strong> ระบบต้องตรวจสอบว่าผู้ส่งมีเงินจริงและไม่ได้ใช้เหรียญเดียวกันซ้ำ</p>
-                <p><strong>ยืนยันความเป็นเจ้าของ:</strong> ตรวจสอบว่าผู้ส่งเป็นเจ้าของเงินที่จะส่งจริง</p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>⛏️ Cryptocurrency Mining</h2>
-            
-            <h3>กระบวนการ Mining</h3>
-            <p>Mining เป็นกระบวนการที่ <span class="highlight">Miners</span> ใช้พลังคอมพิวเตอร์ในการ:</p>
-            <ul>
-                <li><strong>ยืนยันธุรกรรม:</strong> ตรวจสอบความถูกต้องของการโอนเงิน</li>
-                <li><strong>แก้สมการคณิตศาสตร์:</strong> ใช้ SHA-256 Hash Function</li>
-                <li><strong>เพิ่ม Block ใหม่:</strong> เชื่อมโยงเข้ากับ Blockchain</li>
-                <li><strong>รับรางวัล:</strong> ได้รับ Cryptocurrency เป็นค่าตอบแทน</li>
-            </ul>
-
-            <h3>Proof of Work</h3>
-            <p>Miners แข่งขันกันแก้สมการ y = f(x) เพื่อหา nonce (x) ที่ทำให้ได้ Hash ที่ต้องการ ผู้ที่แก้ได้ก่อนจะได้สิทธิ์เพิ่ม Block และรับรางวัล</p>
-
-            <div class="info-box">
-                <h3>💰 ระบบรางวัล Bitcoin</h3>
-                <p><strong>เริ่มต้น (2009):</strong> 50 BTC ต่อ Block</p>
-                <p><strong>ปัจจุบัน:</strong> 3.125 BTC ต่อ Block</p>
-                <p><strong>Halving:</strong> รางวัลลดครึ่งทุก ๆ ช่วงเวลา เพื่อควบคุมอัตราเงินเฟ้อ</p>
-                <p><strong>ขีดจำกัด:</strong> Bitcoin จะมีทั้งหมด 21 ล้านเหรียญ คาดว่าจะครบในปี 2140</p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>🏦 DeFi - Decentralised Finance</h2>
-            
-            <h3>แนวคิด DeFi</h3>
-            <p><span class="highlight">DeFi</span> เป็นระบบการเงินแบบกระจายอำนาจที่ทำงานบน Blockchain โดยไม่ต้องพึ่งพาสถาบันการเงินแบบดั้งเดิม</p>
-
-            <h3>บริการ DeFi หลัก</h3>
-            <ul>
-                <li><strong>Cryptocurrency Exchange:</strong> แลกเปลี่ยน Crypto แบบไม่ต้องผ่านตัวกลาง (เช่น Uniswap)</li>
-                <li><strong>Crypto Lending:</strong> ให้กู้และกู้ยืม Cryptocurrency (เช่น Compound)</li>
-                <li><strong>Yield Farming:</strong> หาผลตอบแทนจากการฝาก Crypto</li>
-                <li><strong>Liquidity Mining:</strong> รับรางวัลจากการให้สภาพคล่อง</li>
-            </ul>
-
-            <div class="warning-box">
-                <h3>⚠️ ข้อจำกัดของ DeFi</h3>
-                <p>แม้ DeFi จะมีข้อดีมาก แต่ยังมีความเสี่ยงในเรื่องของความผันผวนของราคา, ความซับซ้อนทางเทคนิค, และการขาดกฎระเบียบที่ชัดเจน</p>
-            </div>
-        </div>
-
-        <div class="section">
-            <h2>🎨 NFT - Non-Fungible Token</h2>
-            
-            <h3>ความแตกต่างของ Fungible vs Non-Fungible</h3>
-            <div class="tech-specs">
-                <div class="spec-card">
-                    <h3>🔄 Fungible Assets</h3>
-                    <p><strong>แลกเปลี่ยนได้:</strong> เงิน, Bitcoin</p>
-                    <p>ทุกหน่วยมีค่าเท่ากัน สามารถแทนที่กันได้</p>
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6">
+        <div class="container mx-auto text-center">
+            <div class="animate-slide-up">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 gradient-text">
+                    Cryptocurrency
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto">
+                    คู่มือฉบับสมบูรณ์สำหรับเข้าใจโลกของสกุลเงินดิจิทัล บล็อกเชน และเทคโนโลยีการเงินแห่งอนาคต
+                </p>
+                <div class="animate-float">
+                    <div class="inline-block p-8 glass-effect rounded-full">
+                        <div class="w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">₿</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="spec-card">
-                    <h3>💎 Non-Fungible Assets</h3>
-                    <p><strong>ไม่สามารถแลกเปลี่ยนได้:</strong> ศิลปะ, ใบประกาศ</p>
-                    <p>แต่ละชิ้นมีเอกลักษณ์เฉพาะตัว</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section id="overview" class="py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Cryptocurrency คืออะไร?</h2>
+            
+            <!-- Evolution Timeline -->
+            <div class="mb-20">
+                <h3 class="text-2xl font-semibold mb-8 text-center">วิวัฒนาการของระบบการเงิน</h3>
+                <div class="flex flex-wrap justify-center gap-8">
+                    <div class="glass-effect p-6 rounded-xl text-center animate-fade-in">
+                        <div class="w-16 h-16 bg-amber-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">🔄</span>
+                        </div>
+                        <h4 class="font-semibold mb-2">ระบบแลกเปลี่ยน</h4>
+                        <p class="text-sm text-gray-300">การแลกเปลี่ยนสินค้า</p>
+                    </div>
+                    <div class="glass-effect p-6 rounded-xl text-center animate-fade-in">
+                        <div class="w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">🏆</span>
+                        </div>
+                        <h4 class="font-semibold mb-2">ทองคำ</h4>
+                        <p class="text-sm text-gray-300">สื่อกลางการแลกเปลี่ยน</p>
+                    </div>
+                    <div class="glass-effect p-6 rounded-xl text-center animate-fade-in">
+                        <div class="w-16 h-16 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">💵</span>
+                        </div>
+                        <h4 class="font-semibold mb-2">เงินตราแบบ Fiat</h4>
+                        <p class="text-sm text-gray-300">เงินตราที่รัฐบาลรับรอง</p>
+                    </div>
+                    <div class="glass-effect p-6 rounded-xl text-center animate-fade-in border-2 border-cyan-400">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">₿</span>
+                        </div>
+                        <h4 class="font-semibold mb-2">Cryptocurrency</h4>
+                        <p class="text-sm text-gray-300">เงินดิจิทัลแห่งอนาคต</p>
+                    </div>
                 </div>
             </div>
 
-            <h3>ตัวอย่าง NFT ที่มีชื่อเสียง</h3>
-            <ul>
-                <li><strong>Beeple's "First 5000 Days":</strong> ขายได้ 69.3 ล้านดอลลาร์</li>
-                <li><strong>CryptoPunks:</strong> รวมมูลค่าหลายล้านดอลลาร์</li>
-                <li><strong>Jack Dorsey's First Tweet:</strong> ขายในราคา 2.9 ล้านดอลลาร์</li>
-            </ul>
-        </div>
+            <!-- Definition -->
+            <div class="glass-effect p-8 rounded-2xl mb-12">
+                <h3 class="text-3xl font-bold mb-6 gradient-text">คำนิยาม</h3>
+                <p class="text-lg leading-relaxed text-gray-200">
+                    <strong>Cryptocurrency</strong> คือสื่อกลางในการแลกเปลี่ยน ที่ถูกสร้างและเก็บไว้ในรูปแบบอิเล็กทรอนิกส์ใน blockchain 
+                    โดยใช้เทคนิคการเข้ารหัสเพื่อสร้างหน่วยเงินและตรวจสอบการทำธุรกรรม
+                </p>
+            </div>
 
-        <div class="section">
-            <h2>🎮 GameFi - Gaming Finance</h2>
-            
-            <h3>แนวคิด Play-to-Earn</h3>
-            <p><span class="highlight">GameFi</span> รวมระหว่างเกมและ DeFi เข้าด้วยกัน ผู้เล่นสามารถหาเงินได้จากการเล่นเกมผ่านการ:</p>
-            <ul>
-                <li><strong>ชนะการแข่งขัน:</strong> รับรางวัลเป็น Cryptocurrency</li>
-                <li><strong>ซื้อขายไอเทม:</strong> แลกเปลี่ยน NFT ในเกม</li>
-                <li><strong>Staking:</strong> ฝาก Token เพื่อรับผลตอบแทน</li>
-                <li><strong>Governance:</strong> มีสิทธิ์ในการตัดสินใจพัฒนาเกม</li>
-            </ul>
-        </div>
+            <!-- Core Principles -->
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="glass-effect p-8 rounded-2xl text-center">
+                    <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-3xl">🏛️</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Decentralisation</h3>
+                    <p class="text-gray-300">ไม่มีธนาคารกลางควบคุม ระบบกระจายอำนาจ</p>
+                </div>
+                <div class="glass-effect p-8 rounded-2xl text-center">
+                    <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-blue-500 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-3xl">🔒</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Immutability</h3>
+                    <p class="text-gray-300">ไม่สามารถแก้ไขหรือลบธุรกรรมได้หลังจากยืนยันแล้ว</p>
+                </div>
+                <div class="glass-effect p-8 rounded-2xl text-center">
+                    <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-3xl">👁️</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Transparency</h3>
+                    <p class="text-gray-300">ธุรกรรมทั้งหมดเปิดเผยให้ทุกคนในเครือข่ายดูได้</p>
+                </div>
+            </div>
 
-        <div class="section">
-            <h2>💼 ผลกระทบต่อ e-Commerce</h2>
-            
-            <h3>ข้อดีของ Cryptocurrency ใน e-Commerce</h3>
-            <ul>
-                <li><strong>การเข้าถึงโลกกว้าง:</strong> เชื่อมต่อผู้คนทั่วโลกเข้าสู่ระบบ e-Commerce</li>
-                <li><strong>ลดค่าธรรมเนียม:</strong> ไม่ต้องผ่านระบบบัตรเครดิตที่มีค่าใช้จ่ายสูง</li>
-                <li><strong>ความรวดเร็ว:</strong> ธุรกรรมเสร็จสิ้นได้ในเวลาอันสั้น</li>
-                <li><strong>ความปลอดภัย:</strong> การเข้ารหัสที่แข็งแกร่ง</li>
-            </ul>
-
-            <div class="warning-box">
-                <h3>🚧 อุปสรรคในการใช้งาน</h3>
-                <ul>
-                    <li><strong>ความผันผวน:</strong> ราคาเปลี่ยนแปลงอย่างรวดเร็วและไม่คาดเดา</li>
-                    <li><strong>การขาดกฎระเบียบ:</strong> ยังไม่มีกฎหมายที่ชัดเจนในหลายประเทศ</li>
-                    <li><strong>ความซับซ้อน:</strong> ยังไม่เป็นมิตรกับผู้ใช้ทั่วไป</li>
-                    <li><strong>การยอมรับ:</strong> ร้านค้าส่วนใหญ่ยังไม่ยอมรับ</li>
-                </ul>
+            <!-- Physical Properties -->
+            <div class="glass-effect p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 gradient-text">คุณสมบัติพื้นฐานของสกุลเงิน</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">✂️</span>
+                        </div>
+                        <h4 class="font-semibold mb-2">แบ่งได้ (Divisible)</h4>
+                        <p class="text-sm text-gray-300">สามารถแบ่งเป็นหน่วยย่อยได้</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-red-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">💎</span>
+                        </div>
+                        <h4 class="font-semibold mb-2">หายาก (Scarce)</h4>
+                        <p class="text-sm text-gray-300">จำนวนจำกัด ไม่สามารถผลิตได้ง่าย</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">🛡️</span>
+                        </div>
+                        <h4 class="font-semibold mb-2">ทนทาน (Durable)</h4>
+                        <p class="text-sm text-gray-300">ไม่เสื่อมสลายตามเวลา</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">✅</span>
+                        </div>
+                        <h4 class="font-semibold mb-2">ยอมรับได้ (Acceptable)</h4>
+                        <p class="text-sm text-gray-300">ได้รับการยอมรับและไว้วางใจ</p>
+                    </div>
+                </div>
             </div>
         </div>
+    </section>
 
-        <div class="section">
-            <h2>🔮 สรุปและมุมมองอนาคต</h2>
+    <!-- Blockchain Section -->
+    <section id="blockchain" class="py-20 px-6 bg-black bg-opacity-20">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Blockchain คืออะไร?</h2>
             
-            <h3>จุดแข็งของ Cryptocurrency</h3>
-            <ul>
-                <li>กำจัดตัวกลางในระบบการเงิน ลดต้นทุนและเพิ่มประสิทธิภาพ</li>
-                <li>เทคโนโลยี Blockchain ให้ความโปร่งใสและความปลอดภัยสูง</li>
-                <li>เปิดโอกาสให้คนที่ไม่สามารถเข้าถึงระบบธนาคารได้มีบริการการเงิน</li>
-                <li>นวัตกรรมใหม่อย่าง DeFi, NFT, GameFi สร้างระบบเศรษฐกิจดิจิทัล</li>
-            </ul>
+            <div class="grid lg:grid-cols-2 gap-12 mb-16">
+                <div class="glass-effect p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-6">โครงสร้าง Blockchain</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                                <span class="text-xl">📦</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Block (บล็อก)</h4>
+                                <p class="text-gray-300">กลุ่มของธุรกรรมที่ได้รับการยืนยัน</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                                <span class="text-xl">⛓️</span>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Chain (โซ่)</h4>
+                                <p class="text-gray-300">บล็อกแต่ละอันเชื่อมต่อกันด้วยการเข้ารหัส</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-6">การทำงานของ Blockchain</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                            <span>ทำธุรกรรม</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                            <span>ส่งไปยัง Memory Pool</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                            <span>ออกอากาศให้เครือข่าย</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                            <span>ตรวจสอบและอนุมัติ</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-sm font-bold">5</div>
+                            <span>เพิ่มเข้าบล็อกเชน</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <h3>ความท้าทายที่ต้องเผชิญ</h3>
-            <ul>
-                <li>ความผันผวนของราคาที่สูงทำให้ไม่เหมาะเป็นสื่อแลกเปลี่ยนในชีวิتประจำวัน</li>
-                <li>การขาดกฎระเบียบที่ชัดเจนสร้างความไม่แน่นอนให้กับผู้ใช้และธุรกิจ</li>
-                <li>ความซับซ้อนทางเทคนิคยังเป็นอุปสรรคต่อการใช้งานอย่างแพร่หลาย</li>
-                <li>ปัญหาด้านสิ่งแวดล้อมจากการใช้พลังงานสูงในการ Mining</li>
-            </ul>
-
-            <div class="info-box">
-                <h3>🚀 อนาคตของ Cryptocurrency</h3>
-                <p>Cryptocurrency มีศักยภาพที่จะปฏิวัติระบบการเงินโลก แต่ความสำเร็จจะขึ้นอยู่กับการแก้ไขปัญหาความผันผวน การสร้างกฎระเบียบที่เหมาะสม และการพัฒนาเทคโนโลยีที่ใช้งานง่ายขึ้น การยอมรับอย่างแพร่หลายจะเกิดขึ้นเมื่อประโยชน์มากกว่าความเสี่ยงอย่างชัดเจน</p>
+            <!-- Why Verification -->
+            <div class="glass-effect p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 gradient-text">ทำไมต้องมีการตรวจสอบ?</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-red-900 bg-opacity-30 p-6 rounded-xl">
+                        <h4 class="text-xl font-bold mb-4 text-red-400">ป้องกัน Double-Spending</h4>
+                        <p class="text-gray-300">ตรวจสอบให้แน่ใจว่าผู้ส่งไม่ได้ใช้เหรียญเดียวกันสองครั้ง</p>
+                    </div>
+                    <div class="bg-green-900 bg-opacity-30 p-6 rounded-xl">
+                        <h4 class="text-xl font-bold mb-4 text-green-400">ยืนยันความเป็นเจ้าของ</h4>
+                        <p class="text-gray-300">ตรวจสอบว่าผู้ส่งมีเงินจริงอย่างน้อยเท่ากับจำนวนที่จะส่ง</p>
+                    </div>
+                </div>
             </div>
         </div>
+    </section>
 
-        <a href="#" class="download-btn" onclick="downloadPDF()">📥 DOWNLOAD PDF</a>
+    <!-- Mining Section -->
+    <section id="mining" class="py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Cryptocurrency Mining</h2>
+            
+            <div class="grid lg:grid-cols-2 gap-12 mb-16">
+                <div class="glass-effect p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-6">Mining คืออะไร?</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-sm font-bold mt-1">1</div>
+                            <div>
+                                <h4 class="font-semibold">การทำงาน (Mining)</h4>
+                                <p class="text-gray-300">งานที่ทำโดยนักขุด cryptocurrency</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-sm font-bold mt-1">2</div>
+                            <div>
+                                <h4 class="font-semibold">การยืนยัน (Confirming)</h4>
+                                <p class="text-gray-300">นักขุดนำธุรกรรมมายืนยันความถูกต้อง</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-sm font-bold mt-1">3</div>
+                            <div>
+                                <h4 class="font-semibold">เพิ่มเข้าโซ่ (Adding to Chain)</h4>
+                                <p class="text-gray-300">เมื่อยืนยันแล้วจะเพิ่มเข้าโซ่เป็นบล็อกใหม่</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-sm font-bold mt-1">4</div>
+                            <div>
+                                <h4 class="font-semibold">รางวัล (Rewarding)</h4>
+                                <p class="text-gray-300">นักขุดได้รับรางวัลจากการทำงาน</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="footer">
-            <p>📊 สรุปจากเอกสาร Cryptocurrency โดย Sirapat Boonkrong @ DIGITECH, SUT</p>
-            <p>🎨 Theme Design Inspired by Cyberpunk Aesthetic</p>
+                <div class="glass-effect p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-6">Proof of Work</h3>
+                    <div class="bg-slate-800 p-6 rounded-xl mb-6">
+                        <h4 class="font-semibold mb-4">การแก้สมการทางคณิตศาสตร์</h4>
+                        <div class="text-center text-2xl font-mono mb-4">
+                            y = f(x)
+                        </div>
+                        <p class="text-gray-300 text-center">หา x (nonce) โดยใช้ Hash Function SHA-256</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center bg-slate-800 p-4 rounded-lg">
+                            <span>รางวัลปี 2009</span>
+                            <span class="text-yellow-400 font-bold">50 BTC</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-800 p-4 rounded-lg">
+                            <span>รางวัลปัจจุบัน</span>
+                            <span class="text-yellow-400 font-bold">3.125 BTC</span>
+                        </div>
+                        <p class="text-sm text-gray-400">*รางวัลจะลดลงครึ่งหนึ่งทุก ๆ ไม่กี่ปี (Halving)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mining Hardware -->
+            <div class="glass-effect p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 gradient-text">อุปกรณ์การขุด</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-3xl">🖥️</span>
+                        </div>
+                        <h4 class="font-bold mb-2">GPU Mining</h4>
+                        <p class="text-gray-300">การใช้การ์ดจอในการขุด</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-3xl">⚡</span>
+                        </div>
+                        <h4 class="font-bold mb-2">ASIC Mining</h4>
+                        <p class="text-gray-300">เครื่องเฉพาะทางสำหรับขุด</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-3xl">🏭</span>
+                        </div>
+                        <h4 class="font-bold mb-2">Mining Farm</h4>
+                        <p class="text-gray-300">ฟาร์มขุดขนาดใหญ่</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- DeFi & NFT Section -->
+    <section id="defi" class="py-20 px-6 bg-black bg-opacity-20">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">DeFi, NFT และ GameFi</h2>
+            
+            <!-- DeFi -->
+            <div class="mb-16">
+                <div class="glass-effect p-8 rounded-2xl mb-8">
+                    <h3 class="text-3xl font-bold mb-6">DeFi (Decentralised Finance)</h3>
+                    <p class="text-lg text-gray-200 mb-6">
+                        รูปแบบใหม่ของการทำธุรกรรมทางการเงินแบบกระจายอำนาจ ที่ไม่ต้องพึ่งพาสถาบันการเงินกลาง
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="bg-blue-900 bg-opacity-30 p-6 rounded-xl">
+                            <h4 class="text-xl font-bold mb-4">Cryptocurrency Exchange</h4>
+                            <p class="text-gray-300">แลกเปลี่ยนสกุลเงินดิจิทัลแบบไม่ต้องผ่านตัวกลาง</p>
+                        </div>
+                        <div class="bg-green-900 bg-opacity-30 p-6 rounded-xl">
+                            <h4 class="text-xl font-bold mb-4">Crypto Lending</h4>
+                            <p class="text-gray-300">ให้กู้และยืมสกุลเงินดิจิทัลโดยตรง</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NFT -->
+            <div class="mb-16">
+                <div class="glass-effect p-8 rounded-2xl">
+                    <h3 class="text-3xl font-bold mb-6">NFT (Non-Fungible Token)</h3>
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-xl font-bold mb-4">ความแตกต่างระหว่าง Fungible และ Non-Fungible</h4>
+                            <div class="space-y-4">
+                                <div class="bg-green-900 bg-opacity-30 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-green-400">Fungible Assets</h5>
+                                    <p class="text-gray-300">สินทรัพย์ที่แลกเปลี่ยนได้ เช่น เงิน, Bitcoin</p>
+                                </div>
+                                <div class="bg-purple-900 bg-opacity-30 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-purple-400">Non-Fungible Assets</h5>
+                                    <p class="text-gray-300">สินทรัพย์ที่ไม่สามารถแลกเปลี่ยนได้ เช่น งานศิลปะ, ใบปริญญา</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold mb-4">ตัวอย่าง NFT ที่มีชื่อเสียง</h4>
+                            <div class="space-y-3">
+                                <div class="bg-slate-800 p-4 rounded-lg">
+                                    <h5 class="font-semibold">Beeple's "First 5000 Days"</h5>
+                                    <p class="text-yellow-400">$69.3 ล้านดอลลาร์</p>
+                                </div>
+                                <div class="bg-slate-800 p-4 rounded-lg">
+                                    <h5 class="font-semibold">Jack Dorsey's First Tweet</h5>
+                                    <p class="text-yellow-400">$2.9 ล้านดอลลาร์</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GameFi -->
+            <div class="glass-effect p-8 rounded-2xl">
+                <h3 class="text-3xl font-bold mb-6">GameFi (Game + DeFi)</h3>
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-xl font-bold mb-4">Play-to-Earn</h4>
+                        <p class="text-gray-200 mb-6">
+                            เกมที่ทำงานบนเทคโนโลยี blockchain แบบกระจายอำนาจ ผู้เล่นสามารถหาเงินได้จากการเล่นเกมหรือการซื้อขายไอเทม
+                        </p>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <span class="text-sm">🎮</span>
+                                </div>
+                                <span>เล่นเกมเพื่อหารายได้</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <span class="text-sm">🔄</span>
+                                </div>
+                                <span>ซื้อขายไอเทมในเกม</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                    <span class="text-sm">⛓️</span>
+                                </div>
+                                <span>ใช้เทคโนโลยี Blockchain</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-900 to-pink-900 p-6 rounded-xl">
+                        <h4 class="text-xl font-bold mb-4">ตัวอย่างเกม GameFi</h4>
+                        <div class="space-y-3">
+                            <div class="bg-black bg-opacity-30 p-3 rounded-lg">
+                                <span class="font-semibold">Axie Infinity</span>
+                            </div>
+                            <div class="bg-black bg-opacity-30 p-3 rounded-lg">
+                                <span class="font-semibold">The Sandbox</span>
+                            </div>
+                            <div class="bg-black bg-opacity-30 p-3 rounded-lg">
+                                <span class="font-semibold">Decentraland</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wallet Section -->
+    <section class="py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Cryptocurrency Wallet</h2>
+            
+            <div class="glass-effect p-8 rounded-2xl mb-12">
+                <h3 class="text-2xl font-bold mb-6">กระเป๋าเงินดิจิทัลคืออะไร?</h3>
+                <p class="text-lg text-gray-200 mb-8">
+                    กระเป๋าเงินดิจิทัลจำเป็นสำหรับการส่ง รับ และเก็บ cryptocurrency เหมือนกับที่เราต้องมีบัญชีธนาคารสำหรับเงินปกติ
+                </p>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-gradient-to-br from-blue-900 to-blue-700 p-6 rounded-xl text-center">
+                        <div class="w-16 h-16 bg-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">💻</span>
+                        </div>
+                        <h4 class="font-bold mb-3">Desktop Wallets</h4>
+                        <p class="text-sm text-gray-200">เข้าถึงได้จากคอมพิวเตอร์เครื่องเดียว ความปลอดภัยสูง แต่อาจสูญหายได้</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-green-900 to-green-700 p-6 rounded-xl text-center">
+                        <div class="w-16 h-16 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">📱</span>
+                        </div>
+                        <h4 class="font-bold mb-3">Mobile Wallets</h4>
+                        <p class="text-sm text-gray-200">ใช้ผ่านแอปมือถือ สะดวก ใช้ได้ทุกที่ รวมถึงร้านค้าปลีก</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-purple-900 to-purple-700 p-6 rounded-xl text-center">
+                        <div class="w-16 h-16 bg-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">☁️</span>
+                        </div>
+                        <h4 class="font-bold mb-3">Cloud Wallets</h4>
+                        <p class="text-sm text-gray-200">เข้าถึงได้จากทุกอุปกรณ์ สะดวก แต่ private key อยู่กับบุคคลที่สาม</p>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-orange-900 to-orange-700 p-6 rounded-xl text-center border-2 border-orange-400">
+                        <div class="w-16 h-16 bg-orange-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-2xl">🔐</span>
+                        </div>
+                        <h4 class="font-bold mb-3">Hardware Wallets</h4>
+                        <p class="text-sm text-gray-200">เก็บ private key ในอุปกรณ์ USB ปลอดภัยที่สุด เก็บออฟไลน์</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction Process -->
+            <div class="glass-effect p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 gradient-text">การส่งและรับ Cryptocurrency</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-red-900 bg-opacity-30 p-6 rounded-xl">
+                        <h4 class="text-xl font-bold mb-4 text-red-400">การส่ง</h4>
+                        <p class="text-gray-300 mb-4">ใส่ที่อยู่กระเป๋าเงินของผู้รับและเลือกจำนวนที่ต้องการส่ง</p>
+                        <div class="bg-slate-800 p-3 rounded-lg text-sm font-mono">
+                            1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
+                        </div>
+                    </div>
+                    <div class="bg-green-900 bg-opacity-30 p-6 rounded-xl">
+                        <h4 class="text-xl font-bold mb-4 text-green-400">การรับ</h4>
+                        <p class="text-gray-300 mb-4">แค่แชร์ที่อยู่กระเป๋าเงินของคุณให้ผู้ส่ง ไม่ต้องทำอะไรเพิ่ม</p>
+                        <div class="bg-slate-800 p-3 rounded-lg text-sm font-mono">
+                            3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Implications Section -->
+    <section class="py-20 px-6 bg-black bg-opacity-20">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">ผลกระทบและการประยุกต์ใช้</h2>
+            
+            <!-- E-commerce -->
+            <div class="glass-effect p-8 rounded-2xl mb-12">
+                <h3 class="text-2xl font-bold mb-6">ผลกระทบต่อ E-commerce</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-3xl">🌐</span>
+                        </div>
+                        <h4 class="font-bold mb-3">เชื่อมต่อโลก</h4>
+                        <p class="text-gray-300">เชื่อมต่อผู้คนกับโลกของการค้าออนไลน์</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-3xl">🏦</span>
+                        </div>
+                        <h4 class="font-bold mb-3">แทนที่ระบบเก่า</h4>
+                        <p class="text-gray-300">แทนที่ระบบกลางและระบบบัตรเครดิต</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <span class="text-3xl">💰</span>
+                        </div>
+                        <h4 class="font-bold mb-3">ลดค่าใช้จ่าย</h4>
+                        <p class="text-gray-300">ทำให้การซื้อขายง่ายขึ้นและลดค่าธรรมเนียม</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Challenges -->
+            <div class="glass-effect p-8 rounded-2xl">
+                <h3 class="text-2xl font-bold mb-6 gradient-text">อุปสรรคและความท้าทาย</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-red-900 bg-opacity-30 p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-red-500 rounded-full mr-4 flex items-center justify-center">
+                                <span class="text-xl">📈</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-red-400">ความผันผวน (Volatility)</h4>
+                        </div>
+                        <p class="text-gray-300">ราคาอาจเปลี่ยนแปลงอย่างมากในระยะเวลาสั้น โดยไม่มีเหตุผลที่ชัดเจน</p>
+                    </div>
+                    <div class="bg-yellow-900 bg-opacity-30 p-6 rounded-xl">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-yellow-500 rounded-full mr-4 flex items-center justify-center">
+                                <span class="text-xl">⚖️</span>
+                            </div>
+                            <h4 class="text-xl font-bold text-yellow-400">การขาดกฎระเบียบ</h4>
+                        </div>
+                        <p class="text-gray-300">การยอมรับอย่างแพร่หลายขึ้นอยู่กับการควบคุมโดยรัฐบาล</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Summary Section -->
+    <section class="py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">สรุป</h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="glass-effect p-8 rounded-2xl">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-sm font-bold mt-1">1</div>
+                                <div>
+                                    <h4 class="font-semibold mb-2">จุดประสงค์หลัก</h4>
+                                    <p class="text-gray-300">Cryptocurrency ถูกสร้างขึ้นเพื่อกำจัดสถาบันกลางในระบบการเงิน</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-sm font-bold mt-1">2</div>
+                                <div>
+                                    <h4 class="font-semibold mb-2">เทคโนโลยีพื้นฐาน</h4>
+                                    <p class="text-gray-300">Cryptocurrency ทำงานบนเทคโนโลยี Blockchain</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-sm font-bold mt-1">3</div>
+                                <div>
+                                    <h4 class="font-semibold mb-2">ผลกระทบกว้างไกล</h4>
+                                    <p class="text-gray-300">มีผลต่อหลายสาขา: ธนาคาร, ผู้ไม่มีบัญชีธนาคาร, และ E-commerce</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-sm font-bold mt-1">4</div>
+                                <div>
+                                    <h4 class="font-semibold mb-2">อนาคตที่รอคอย</h4>
+                                    <p class="text-gray-300">ต้องมีกฎระเบียบที่ชัดเจนก่อนที่จะได้รับการยอมรับอย่างแพร่หลาย</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 bg-black bg-opacity-40">
+        <div class="container mx-auto text-center">
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold gradient-text mb-4">CryptoGuide</h3>
+                <p class="text-gray-400">คู่มือฉบับสมบูรณ์สำหรับ Cryptocurrency และ Blockchain</p>
+            </div>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#overview" class="text-gray-400 hover:text-cyan-400 transition-colors">ภาพรวม</a>
+                <a href="#blockchain" class="text-gray-400 hover:text-cyan-400 transition-colors">Blockchain</a>
+                <a href="#mining" class="text-gray-400 hover:text-cyan-400 transition-colors">Mining</a>
+                <a href="#defi" class="text-gray-400 hover:text-cyan-400 transition-colors">DeFi & NFT</a>
+            </div>
+            <div class="border-t border-gray-800 pt-8">
+                <p class="text-gray-500">สร้างโดย Sirapat Boonkrong @ DIGITECH, SUT</p>
+                <p class="text-gray-600 text-sm mt-2">เนื้อหาจากการนำเสนอเรื่อง Cryptocurrency</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button onclick="scrollToTop()" class="fixed bottom-8 right-8 w-12 h-12 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+        <span class="text-white text-xl">↑</span>
+    </button>
 
     <script>
-        function downloadPDF() {
-            window.print();
-        }
-
-        // Matrix rain effect
-        function createMatrixRain() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const matrixBg = document.querySelector('.matrix-bg');
-            
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            matrixBg.appendChild(canvas);
-
-            const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}";
-            const matrixArray = matrix.split("");
-
-            const fontSize = 10;
-            const columns = canvas.width / fontSize;
-
-            const drops = [];
-            for (let x = 0; x < columns; x++) {
-                drops[x] = 1;
-            }
-
-            function draw() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                ctx.fillStyle = '#00f5ff';
-                ctx.font = fontSize + 'px monospace';
-
-                for (let i = 0; i < drops.length; i++) {
-                    const text = matrixArray[Math.floor(Math.random() * matrixArray.length)];
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
+            });
+        });
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with animation classes
+        document.querySelectorAll('.animate-fade-in, .animate-slide-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(el);
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.animate-float');
+            if (parallax) {
+                parallax.style.transform = `translateY(${scrolled * 0.1}px)`;
             }
-
-            setInterval(draw, 35);
-        }
-
-        // Initialize matrix effect
-        document.addEventListener('DOMContentLoaded', function() {
-            createMatrixRain();
-            
-            // Add glitch effect to title
-            const title = document.querySelector('h1');
-            setInterval(() => {
-                title.style.textShadow = `
-                    ${Math.random() * 10}px ${Math.random() * 10}px 0 rgba(255, 0, 128, 0.8),
-                    ${Math.random() * -10}px ${Math.random() * -10}px 0 rgba(0, 245, 255, 0.8)
-                `;
-                setTimeout(() => {
-                    title.style.textShadow = '0 0 30px rgba(0, 245, 255, 0.5)';
-                }, 150);
-            }, 3000);
         });
-
-        function downloadPDF() {
-            // Hide matrix background for printing
-            document.querySelector('.matrix-bg').style.display = 'none';
-            
-            // Trigger print dialog
-            window.print();
-            
-            // Show matrix background again after printing
-            setTimeout(() => {
-                document.querySelector('.matrix-bg').style.display = 'block';
-            }, 1000);
-        }
-
-        // Responsive canvas resize
-        window.addEventListener('resize', () => {
-            location.reload();
-        });
+    </script>
+</body>
+</html>
