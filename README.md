@@ -54,6 +54,10 @@
 | Cryptocurrencies (Part 1) | [🔗 คลิกที่นี่](https://martinnezsavemaiwai.github.io/Man-Economy-and-Development/Cryptocurrencies.html) |
 | Cryptocurrencies (Part 2) | [🔗 คลิกที่นี่](https://martinnezsavemaiwai.github.io/Man-Economy-and-Development/Cryptocurrencies2.html) |
 | Entrepreneurial Mindset | [🔗 คลิกที่นี่](https://martinnezsavemaiwai.github.io/Man-Economy-and-Development/ENTREPRENEURIAL_MINDSET.html) |
+| 📘 [Lecture Summary PDF](https://martinnezsavemaiwai.github.io/Man-Economy-and-Development/docs/สรุปภาษี.pdf) |
+
+
+
 
 > 💡 เปิดด้วยเว็บเบราว์เซอร์เพื่อรับประสบการณ์เต็มรูปแบบ  
 
